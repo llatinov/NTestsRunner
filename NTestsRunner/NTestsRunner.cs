@@ -33,7 +33,7 @@ namespace AutomationRhapsody.NTestsRunner
 
         public NTestsRunner()
         {
-            testResultsDir = Directory.GetCurrentDirectory();
+            TestResultsDir = Directory.GetCurrentDirectory();
             MaxTestCaseRuntimeMinutes = 15;
             TestsToExecute = new List<string>();
         }
