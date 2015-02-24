@@ -11,13 +11,29 @@ namespace AutomationRhapsody.NTestsRunner
 {
     public class TestsRunner
     {
-        public string TestResultsDir { get; set; }
+        private string testResultsDir;
+        public string TestResultsDir
+        {
+            get
+            {
+                return testResultsDir;
+            }
+            set
+            {
+                testResultsDir = value;
+                if (!testResultsDir.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                {
+                    testResultsDir += Path.DirectorySeparatorChar;
+                }
+                testResultsDir += DateTime.Now.ToString("yyyy-mm-dd_HH-mm-ss") + Path.DirectorySeparatorChar;
+            }
+        }
         public int MaxTestCaseRuntimeMinutes { get; set; }
         public List<string> TestsToExecute { get; set; }
 
         public TestsRunner()
         {
-            TestResultsDir = Directory.GetCurrentDirectory();
+            testResultsDir = Directory.GetCurrentDirectory();
             MaxTestCaseRuntimeMinutes = 15;
             TestsToExecute = new List<string>();
         }
@@ -163,12 +179,13 @@ namespace AutomationRhapsody.NTestsRunner
 
         private void SaveResults(List<TestPlanResult> testPlans)
         {
-            if (!TestResultsDir.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!Directory.Exists(testResultsDir))
             {
-                TestResultsDir += Path.DirectorySeparatorChar;
+                Directory.CreateDirectory(testResultsDir);
             }
-            SaveResultsXml(testPlans, TestResultsDir + "Results.xml");
-            HtmlGenerator.SaveResultsHtml(testPlans, TestResultsDir + "Results.html");
+
+            SaveResultsXml(testPlans, testResultsDir + "Results.xml");
+            HtmlGenerator.SaveResultsHtml(testPlans, testResultsDir + "Results.html");
         }
         #endregion
     }
