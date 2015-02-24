@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AutomationRhapsody.NTestsRunner
 {
-    public class TestsRunner
+    public class NTestsRunner
     {
         private string testResultsDir;
         public string TestResultsDir
@@ -31,7 +31,7 @@ namespace AutomationRhapsody.NTestsRunner
         public int MaxTestCaseRuntimeMinutes { get; set; }
         public List<string> TestsToExecute { get; set; }
 
-        public TestsRunner()
+        public NTestsRunner()
         {
             testResultsDir = Directory.GetCurrentDirectory();
             MaxTestCaseRuntimeMinutes = 15;
