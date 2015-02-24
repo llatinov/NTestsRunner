@@ -37,8 +37,8 @@
   <ItemGroup>
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="HtmlGenerator.cs" />
+    <Compile Include="NTestsRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestsRunner.cs" />
     <Compile Include="Types\StringValue.cs" />
     <Compile Include="Types\TestAttributes.cs" />
     <Compile Include="Types\TestCaseResult.cs" />
