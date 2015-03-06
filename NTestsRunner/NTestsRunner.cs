@@ -25,7 +25,7 @@ namespace AutomationRhapsody.NTestsRunner
                 {
                     testResultsDir += Path.DirectorySeparatorChar;
                 }
-                testResultsDir += DateTime.Now.ToString("yyyy-mm-dd_HH-mm-ss") + Path.DirectorySeparatorChar;
+                testResultsDir += DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + Path.DirectorySeparatorChar;
             }
         }
         public int MaxTestCaseRuntimeMinutes { get; set; }
