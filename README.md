@@ -5,7 +5,10 @@ NTestsRunner is a tool for running functional automated tests. It gives you flex
 ## Usage
 1. Create new console application in MS Visual Studio.
 2. Add reference to NTestsRunner.dll.
-3. Create test classes with test methods. Important is that test methods should have specific signature. It should accept List of Verifications as argument: <code>public void Initialise(List<Verification> verifications)</code>
+3. Create test classes with test methods. Important is that test methods should have specific signature. It should accept List of Verifications as argument:
+
+	`public void TestMethod(List<Verification> verifications)`
+
 4. In console application’s main method instantiate NTestsRunner, configure it and run the tests.
 
     	static void Main(string[] args)
