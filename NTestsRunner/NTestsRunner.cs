@@ -11,35 +11,20 @@ namespace AutomationRhapsody.NTestsRunner
 {
     public class NTestsRunner
     {
-        private string testResultsDir;
-        public string TestResultsDir
-        {
-            get
-            {
-                return testResultsDir;
-            }
-            set
-            {
-                testResultsDir = value;
-                if (!testResultsDir.EndsWith(Path.DirectorySeparatorChar.ToString()))
-                {
-                    testResultsDir += Path.DirectorySeparatorChar;
-                }
-                testResultsDir += DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + Path.DirectorySeparatorChar;
-            }
-        }
-        public int MaxTestCaseRuntimeMinutes { get; set; }
-        public List<string> TestsToExecute { get; set; }
+        private NTestsRunnerSettings settings;
 
-        public NTestsRunner()
+        public NTestsRunner(NTestsRunnerSettings settings)
         {
-            TestResultsDir = Directory.GetCurrentDirectory();
-            MaxTestCaseRuntimeMinutes = 15;
-            TestsToExecute = new List<string>();
+            this.settings = settings;
         }
 
         public void Execute()
         {
+            if (this.settings.PreventScreenLock)
+            {
+                PreventLock.DisableSleep();
+            }
+
             Assembly assembly = Assembly.GetCallingAssembly();
             List<TestPlanResult> testPlans = new List<TestPlanResult>();
             List<Type> types = GetTestsToExecute(assembly);
@@ -66,6 +51,11 @@ namespace AutomationRhapsody.NTestsRunner
             }
 
             SaveResults(testPlans);
+
+            if (this.settings.PreventScreenLock)
+            {
+                PreventLock.EnableSleep();
+            }
         }
 
         #region Private methods
@@ -74,9 +64,9 @@ namespace AutomationRhapsody.NTestsRunner
             List<Type> typesToExecute = new List<Type>();
             // If there are manually provided tests run them
             Type[] types = assembly.GetTypes();
-            if (TestsToExecute != null && TestsToExecute.Count > 0)
+            if (this.settings.TestsToExecute != null && this.settings.TestsToExecute.Any())
             {
-                foreach (string testToExecute in TestsToExecute)
+                foreach (string testToExecute in this.settings.TestsToExecute)
                 {
                     Type type = types.Where(x => x.Name == testToExecute).FirstOrDefault();
                     if (type != null)
@@ -124,7 +114,7 @@ namespace AutomationRhapsody.NTestsRunner
                         try
                         {
                             Task task = new TaskFactory().StartNew(() => method.Invoke(disposable, new object[] { testCase.Verifications }));
-                            task.Wait(TimeSpan.FromMinutes(MaxTestCaseRuntimeMinutes));
+                            task.Wait(TimeSpan.FromMinutes(this.settings.MaxTestCaseRuntimeMinutes));
                         }
                         catch (Exception ex)
                         {
@@ -134,9 +124,9 @@ namespace AutomationRhapsody.NTestsRunner
                         }
                         long end = DateTime.Now.Ticks;
                         TimeSpan executionTime = new TimeSpan(end - start);
-                        if ((int)executionTime.TotalMinutes >= MaxTestCaseRuntimeMinutes)
+                        if ((int)executionTime.TotalMinutes >= this.settings.MaxTestCaseRuntimeMinutes)
                         {
-                            testCase.Verifications.Add(new VerificationFailed("TestCase stopped as it has exceed maxim allowed runtime of {0} minutes. To increase time change MaxTestCaseRuntimeMinutes config parameter.", MaxTestCaseRuntimeMinutes));
+                            testCase.Verifications.Add(new VerificationFailed("TestCase stopped as it has exceeded maximum allowed runtime of {0} minutes. To increase time change MaxTestCaseRuntimeMinutes settings value.", this.settings.MaxTestCaseRuntimeMinutes));
                         }
                         testCase.Name = method.Name;
                         testCase.Time = executionTime;
@@ -179,13 +169,13 @@ namespace AutomationRhapsody.NTestsRunner
 
         private void SaveResults(List<TestPlanResult> testPlans)
         {
-            if (!Directory.Exists(testResultsDir))
+            if (!Directory.Exists(this.settings.TestResultsDir))
             {
-                Directory.CreateDirectory(testResultsDir);
+                Directory.CreateDirectory(this.settings.TestResultsDir);
             }
 
-            SaveResultsXml(testPlans, testResultsDir + "Results.xml");
-            HtmlGenerator.SaveResultsHtml(testPlans, testResultsDir + "Results.html");
+            SaveResultsXml(testPlans, this.settings.TestResultsDir + "Results.xml");
+            HtmlGenerator.SaveResultsHtml(testPlans, this.settings.TestResultsDir + "Results.html");
         }
         #endregion
     }
