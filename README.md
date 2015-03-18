@@ -13,9 +13,11 @@ NTestsRunner is a tool for running functional automated tests. It gives you flex
 
     	static void Main(string[] args)
     	{
-    		NTestsRunner runner = new NTestsRunner();
-    		runner.TestResultsDir = @"C:\temp";
-    		runner.Execute();
+			NTestsRunnerSettings settings = new NTestsRunnerSettings();
+            settings.TestResultsDir = @"C:\temp";
+    		
+			NTestsRunner runner = new NTestsRunner(settings);
+            runner.Execute();
     	}
     
 ## Reference
