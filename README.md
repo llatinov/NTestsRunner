@@ -28,4 +28,4 @@ NTestsRunner is a tool for running functional automated tests. It gives you flex
     	}
     
 ## Reference
-See following <a target="_blank" href="https://github.com/llatinov/SampleAppPlus">GitHub</a> project for reference how to use NTestsRunner. See NTestsRunner <a target="_blank" href="http://automationrhapsody.com/ntestsrunner/">home page</a> for more details.
+See following <a target="_blank" href="https://github.com/llatinov/NTestsRunner">GitHub</a> project for reference how to use NTestsRunner. See NTestsRunner <a target="_blank" href="http://automationrhapsody.com/ntestsrunner/">home page</a> for more details.
